@@ -1,0 +1,31 @@
+{
+  "name": "piggy-bank-server",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "The backend server for PiggyBank Wechat MiniApp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrotherOrange/piggy-bank-server.git"
+  },
+  "keywords": [
+    "Node",
+    "REST",
+    "Server",
+    "HTTP"
+  ],
+  "author": "Jihao Zhang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BrotherOrange/piggy-bank-server/issues"
+  },
+  "homepage": "https://github.com/BrotherOrange/piggy-bank-server#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "parse": "^4.1.0"
+  }
+}
