@@ -1,22 +1,59 @@
-import express from 'express';
-import Parse from 'parse/node.js';
+import mongoose from "mongoose";
+import express from "express";
+import session from "express-session";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import AuthController from "./controllers/auth-controller.js";
+import UploadController from "./controllers/upload-controller.js";
 import UserController from './controllers/user-controller.js';
 import BillController from './controllers/bill-controller.js';
 
-Parse.serverURL = 'https://parseapi.back4app.com'; // This is your Server URL
-// Remember to inform BOTH the Back4App Application ID AND the JavaScript KEY
+mongoose.connect(
+  "mongodb+srv://markus:zjh991600@treasure.gkhdtga.mongodb.net/piggy-bank?retryWrites=true&w=majority"
+)
 
-Parse.initialize(
-  'ra4Q05prLXzDT2bWx6xYXn34ku6NldBUxoqCFuM9', // This is your Application ID
-  'j6u33SNTrj64NeHTr2uSMseU9c5JJPnXOVCcCuTl', // This is your Javascript key
-  '6M4DKBByrLx4Kzzbj5l0qs3KRwifeqehSsaKck69' // This is your Master key (never use it in the frontend)
-);
+const blackUrlList = [
+  "/api/users/profile",
+  "/api/users/edit",
+  "/api/users/password"
+]
+
 
 const app = express();
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(
+  session({
+    secret: "sessionKey",
+    name: 'token',
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24
+    },
+    saveUninitialized: true,
+    rolling: true,
+  })
+);
 
-app.get('/', (req, res) => {res.send('Welcome to Piggy Bank!!!')});
+app.use(function (req, res, next) {
+  const { userInfo } = req.session;
+  if (blackUrlList.includes(req.url)) {
+    if (!userInfo) {
+      res.send({ flag: false, status: 403, msg: 'cookies outdated', email: 0 });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 UserController(app);
 BillController(app);
+UploadController(app);
+AuthController(app);
 
 app.listen(4000);
