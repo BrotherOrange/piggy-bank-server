@@ -1,6 +1,7 @@
 import express from 'express';
 import Parse from 'parse/node.js';
 import UserController from './controllers/user-controller.js';
+import BillController from './controllers/bill-controller.js';
 
 Parse.serverURL = 'https://parseapi.back4app.com'; // This is your Server URL
 // Remember to inform BOTH the Back4App Application ID AND the JavaScript KEY
@@ -12,7 +13,10 @@ Parse.initialize(
 );
 
 const app = express();
-app.get('/hello', (req, res) => {res.send('Life is good!')})
-app.get('/', (req, res) => {res.send('Welcome to Full Stack Development!')})
+
+app.get('/', (req, res) => {res.send('Welcome to Piggy Bank!!!')});
+
 UserController(app);
+BillController(app);
+
 app.listen(4000);
