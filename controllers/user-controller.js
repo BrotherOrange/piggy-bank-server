@@ -1,4 +1,5 @@
 import * as usersDao from "../dao/users/users-dao.js";
+import { ObjectId } from "mongodb";
 
 const UserController = (app) => {
   const findAllUser = async (req, res) => {
@@ -8,38 +9,38 @@ const UserController = (app) => {
   };
   
   const findUserById = async (req, res) => {
-    console.log("findUser", req.params.id);
-    const userId = new ObjectId(req.params.id);
-    const user = await usersDao.findUserById(userId);
+    console.log("findUser", req.query.uid);
+    const uid = new ObjectId(req.query.uid);
+    const user = await usersDao.findUserById(uid);
     res.json(user);
   };
   
   const findUserByPhone = async (req, res) => {
-    console.log("findUser", req.params.phone);
-    const email = req.params.phone;
-    const user = await usersDao.findUserByEmail(email);
+    console.log("findUser", req.query.phone);
+    const phone = req.query.phone;
+    const user = await usersDao.findUserByPhone(phone);
     res.json(user);
   };
   
   const findUsersByNickname = async (req, res) => {
-    console.log("findUser", req.params.nickname);
-    const nickname = req.params.nickname;
+    console.log("findUser", req.query.nickname);
+    const nickname = req.query.nickname;
     const users = await usersDao.findUsersByNickname(nickname);
     res.json(users);
   };
 
   const findUsersByBirth = async (req, res) => {
-    console.log("findUser", req.body.birthday);
-    const birthday = req.body.birthday;
+    console.log("findUser", req.query.birthday);
+    const birthday = req.query.birthday;
     const users = await usersDao.findUsersByBirth(birthday);
     res.json(users);
   };
 
   app.get("/api/users/all", findAllUser);
-  app.get("/api/users/id/:id", findUserById);
-  app.get("/api/users/phone/:phone", findUserByPhone);
-  app.get("/api/users/nickname/:nickname", findUsersByNickname);
-  app.post("/api/users/birthday", findUsersByBirth);
+  app.get("/api/users/id", findUserById);
+  app.get("/api/users/phone", findUserByPhone);
+  app.get("/api/users/nickname", findUsersByNickname);
+  app.get("/api/users/birthday", findUsersByBirth);
 };
 
 export default UserController;

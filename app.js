@@ -13,10 +13,10 @@ mongoose.connect(
   "mongodb+srv://markus:zjh991600@treasure.gkhdtga.mongodb.net/piggy-bank?retryWrites=true&w=majority"
 )
 
-const blackUrlList = [
-  "/api/users/profile",
-  "/api/users/edit",
-  "/api/users/password"
+const whiteUrlList = [
+  "/api/users/register",
+  "/api/users/login",
+  "/api/users/logout"
 ]
 
 
@@ -40,7 +40,7 @@ app.use(
 
 app.use(function (req, res, next) {
   const { userInfo } = req.session;
-  if (blackUrlList.includes(req.url)) {
+  if (!whiteUrlList.includes(req.url)) {
     if (!userInfo) {
       res.send({ flag: false, status: 403, msg: 'cookies outdated', email: 0 });
     } else {
