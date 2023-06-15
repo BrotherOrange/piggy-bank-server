@@ -1,6 +1,7 @@
 import * as billsDao from "../dao/bills/bills-dao.js";
 import * as userDao from "../dao/users/users-dao.js";
 import { ObjectId } from "mongodb";
+import moment from 'moment-timezone';
 
 const BillController = (app) => {
   const findAllBills = async (req, res) => {
@@ -59,6 +60,9 @@ const BillController = (app) => {
   const createBill = async (req, res) => {
     const newBill = req.body;
     newBill.userID = req.session["currentUser"]._id;
+    let date = moment().tz("Asia/Shanghai").format();
+    newBill.createdAt = date;
+    newBill.updatedAt = date;
     const insertedBill = await billsDao.createBill(newBill);
     const user = req.session["currentUser"];
     console.log(user);
@@ -88,6 +92,8 @@ const BillController = (app) => {
   const updateBill = async (req, res) => {
     const billIdToUpdate = req.body._id;
     const updates = req.body;
+    let date = moment().tz("Asia/Shanghai").format();
+    updateBill.updatedAt = date;
     const result = await billsDao.updateBill(billIdToUpdate, updates);
     const bill = await billsDao.findBillById(billIdToUpdate);
     res.json(bill);

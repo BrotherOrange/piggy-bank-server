@@ -1,6 +1,7 @@
 import * as usersDao from "../dao/users/users-dao.js";
 import { createRequire } from 'module';
 import bcrypt from "bcryptjs";
+import moment from "moment-timezone";
 
 const AuthController = (app) => {
 
@@ -17,6 +18,9 @@ const AuthController = (app) => {
       return;
     }
     req.body.password = bcrypt.hashSync(password, 10);
+    let date = moment().tz("Asia/Shanghai").format();
+    req.body.createdAt = date;
+    req.body.updatedAt = date;
     const newUser = await usersDao.createUser(req.body);
     req.session["currentUser"] = newUser;
     res.json(newUser);
@@ -33,7 +37,7 @@ const AuthController = (app) => {
     if (user && bcrypt.compareSync(password, user.password)) {
       req.session["currentUser"] = user;
       req.session.userInfo = { phone };
-      res.status(200).json({ msg: "login success" });
+      res.status(200).json(req.session["currentUser"]);
     } else {
       res.status(404).json({ msg: "login failed" });
     }
@@ -61,6 +65,8 @@ const AuthController = (app) => {
   const editProfile = async (req, res) => {
     const currentUser = req.session["currentUser"];
     const uid = currentUser._id;
+    let date = moment().tz("Asia/Shanghai").format();
+    req.body.updatedAt = date;
     const updates = req.body;
     const body = await usersDao.updateUser(uid, updates);
     const user = await usersDao.findUserById(uid);
@@ -75,6 +81,8 @@ const AuthController = (app) => {
     const uid = currentUser._id;
     const password = req.body.password;
     req.body.password = bcrypt.hashSync(password, 10);
+    let date = moment().tz("Asia/Shanghai").format();
+    req.body.updatedAt = date;
     const updates = req.body;
     const body = await usersDao.updateUser(uid, updates);
     const user = await usersDao.findUserById(uid);
