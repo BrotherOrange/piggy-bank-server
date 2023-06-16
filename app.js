@@ -24,7 +24,7 @@ const whiteUrlList = [
   "/api/bills/time",
   "/api/bills/cost",
   "/api/bills/contents",
-  "/api/files/id"
+  "/api/files/id",
 ];
 
 const app = express();
@@ -54,13 +54,18 @@ app.use(
 
 app.use(function (req, res, next) {
   const { userInfo } = req.session;
-  if (!whiteUrlList.includes(req.url)) {
+  if (
+    !whiteUrlList.includes(req.url) &&
+    !req.url.startsWith("/api/files/id")
+  ) {
+    console.log(req.url);
     if (!userInfo) {
       res.send({ flag: false, status: 403, msg: "cookies outdated", email: 0 });
     } else {
       next();
     }
   } else {
+    console.log(req.url);
     next();
   }
 });
