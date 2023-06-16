@@ -71,7 +71,7 @@ const download = async (req, res) => {
       bucketName: "photos",
     });
 
-    const fileId = new ObjectId(req.params.id);
+    const fileId = new ObjectId(req.query.id);
     let downloadStream = bucket.openDownloadStream(fileId);
 
     downloadStream.on("data", function (data) {
@@ -95,5 +95,5 @@ const download = async (req, res) => {
 export default (app) => {
   app.post("/api/files/upload", uploadFiles);
   app.get("/api/files", getListFiles);
-  app.get("/api/files/:id", download);
+  app.get("/api/files/id", download);
 };

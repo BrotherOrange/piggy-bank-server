@@ -24,7 +24,7 @@ const whiteUrlList = [
   "/api/bills/time",
   "/api/bills/cost",
   "/api/bills/contents",
-  "/api/files"
+  "/api/files/id"
 ];
 
 const app = express();
