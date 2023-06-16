@@ -60,7 +60,7 @@ const BillController = (app) => {
   const createBill = async (req, res) => {
     const newBill = req.body;
     newBill.userID = req.session["currentUser"]._id;
-    let date = moment().tz("Asia/Shanghai").format();
+    let date = new Date();
     newBill.createdAt = date;
     newBill.updatedAt = date;
     const insertedBill = await billsDao.createBill(newBill);
@@ -92,7 +92,7 @@ const BillController = (app) => {
   const updateBill = async (req, res) => {
     const billIdToUpdate = req.body._id;
     const updates = req.body;
-    let date = moment().tz("Asia/Shanghai").format();
+    let date = new Date();
     updateBill.updatedAt = date;
     const result = await billsDao.updateBill(billIdToUpdate, updates);
     const bill = await billsDao.findBillById(billIdToUpdate);
